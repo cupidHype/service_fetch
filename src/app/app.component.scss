@@ -1,0 +1,103 @@
+table {
+  width: 100%;
+  margin-top: 5%;
+}
+h2 {
+  text-align: center;
+  font-size: 90px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.allow-scroll {
+  height: 0px;
+  overflow-y: auto !important;
+}
+.allow-scroll::-webkit-scrollbar { width: 0 !important }
+.allow-scroll { overflow: -moz-scrollbars-none; }
+.allow-scroll { -ms-overflow-style: none; }
+
+.report-form-field {
+margin: 10px;
+min-width: 120px;
+}
+.btn-generate {
+margin-left: 20px;
+}
+.mat-figure-wrapper {
+position: absolute;
+left: 0;
+width: 100%;
+}
+.main-project-info {
+width: 100%;
+}
+.main-project-info > div {
+width: 50%;
+display: inline-block;
+text-align: center;
+}
+.main-project-info .mat-caption {
+border-bottom: 1px solid #999;	
+}
+
+.project-info-wrapper {
+  float: right;
+  width: 50%;
+  max-width: 500px;
+  text-align: center;
+  margin: 10px 0;
+}
+.project-info-label {
+  border-bottom: 1px solid #000;
+  font: 400 12px/20px Roboto, "Helvetica Neue", sans-serif
+}
+.project-info {
+  font-size: 20px;
+  font-weight: 600;
+}
+.datatable-scroll { width: 100% !important; }
+
+.mattable-container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.mattable {
+  flex: 1 1 auto;
+  max-height: 500px;
+  display: table;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.bg-white {
+  background-color: #FFFFFF !important;
+  overflow: hidden;
+}
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  padding: 10px;
+}
+td.mat-footer-cell, th.mat-header-cell {
+  white-space: nowrap;
+}
+
+.collapse-detail-row {
+  height: 0 !important;
+  overflow: hidden;
+}
+.collapse-detail-row > td {
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+}
+.collapse-detail-row td.expanded {
+  padding: 10px !important;
+}
+.no-padding {
+  padding: 0 !important;
+}
+
+.scroll-container {
+  max-height: 450px;
+  overflow: auto;
+}
