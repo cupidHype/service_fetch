@@ -63,7 +63,6 @@ export class AppComponent implements OnInit {
   // }
 
   ngOnInit() {
-    // this.dataSource.paginator = this.paginator;
     // this.dataSource.sort = this.mainDataSourceSort;
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
