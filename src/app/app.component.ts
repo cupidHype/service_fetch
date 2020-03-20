@@ -12,6 +12,7 @@ import {
   transition,
   animate
 } from "@angular/animations";
+import { EmployeeService } from '../app/employee.service'
 // import { MatSort } from '@angular/material/sort';
 // import {MatPaginator} from '@angular/material/paginator';
 import { MatPaginator, MatSort } from "@angular/material";
@@ -56,18 +57,36 @@ export class AppComponent implements OnInit {
   openedParts: any;
   childDataSource: any;
   mainDataSource: any;
-  dataSource: CustomDataSource = new CustomDataSource([]);
+  dataSource:CustomDataSource = new CustomDataSource([]);
   matTableOptions: MatTableOptions = new MatTableOptions({});
+  apiData;
+
+  constructor(private fb: FormBuilder, private employeeService : EmployeeService) {}
   // get userName(){
   //   return this.registrationForm.get('userName');
   // }
 
   ngOnInit() {
+    this.getFromService()
     // this.dataSource.sort = this.mainDataSourceSort;
+
+    console.log('this.apiData',this.apiData)
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+
+    
     // this.dataSource.paginator = this.StationCapSimMetricPaginator;
     this.setTableDataSource([]);
+  }
+
+  getFromService(){
+    this.employeeService
+    .getEmployees()
+    .subscribe((data) => {
+      console.log(data)
+      this.apiData = JSON.stringify(data)
+    })
+    console.log('ngOnInit',this.apiData)
   }
 
   setTableDataSource(datasource): void {
@@ -178,7 +197,7 @@ export class AppComponent implements OnInit {
     let filtered = this.dataSource.data.filter(data => data.id !== id);
     this.dataSource.updateData(filtered);
   }
-  constructor(private fb: FormBuilder) {}
+ 
 
   registrationForm = this.fb.group({
     // userName: ['',[Validators.required, Validators.minLength(2), forbiddenNameValidator(/password/)]],
