@@ -2,9 +2,7 @@ export class EmployeeHeader {
 
   private _main:Array<{key, display}> = [
       {key:"id", display:"ID."},
-      {key:"fn", display:"First Name"},
-      {key:"ln", display:"Last Name"},
-      {key:"pos", display:"Position"}
+      {key:"title", display:"Title"}
   ]
 
   private _child:Array<{key, display}> = [

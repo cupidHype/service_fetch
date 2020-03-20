@@ -71,10 +71,8 @@ export class AppComponent implements OnInit {
     // this.dataSource.sort = this.mainDataSourceSort;
 
     console.log('this.apiData',this.apiData)
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-
-    
+    // this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
     // this.dataSource.paginator = this.StationCapSimMetricPaginator;
     this.setTableDataSource([]);
   }
@@ -84,7 +82,9 @@ export class AppComponent implements OnInit {
     .getEmployees()
     .subscribe((data) => {
       console.log(data)
-      this.apiData = JSON.stringify(data)
+      this.apiData = data//[JSON.stringify(data)]
+      this.apiData.sort = this.sort;
+      this.apiData.paginator = this.paginator;
     })
     console.log('ngOnInit',this.apiData)
   }
