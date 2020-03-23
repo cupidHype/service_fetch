@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
-import { forbiddenNameValidator } from "./shared/user-name.validator";
-import { PasswordValidator } from "./shared/password.validator";
-import { CustomDataSource } from "./shared/models/custom-datasource.model";
-import { MatTableOptions } from "./shared/models/mat-table-options.model";
-import { EmployeeHeader } from "./shared/table-headers/employee.header";
+import { forbiddenNameValidator } from "../shared/user-name.validator";
+import { PasswordValidator } from "../shared/password.validator";
+import { CustomDataSource } from "../shared/models/custom-datasource.model";
+import { MatTableOptions } from "../shared/models/mat-table-options.model";
+import { EmployeeHeader } from "../shared/table-headers/employee.header";
 import {
   trigger,
   state,
@@ -12,15 +12,12 @@ import {
   transition,
   animate
 } from "@angular/animations";
-import { EmployeeService } from '../app/employee.service'
-// import { MatSort } from '@angular/material/sort';
-// import {MatPaginator} from '@angular/material/paginator';
+import { EmployeeService } from '../../app/employee.service'
 import { MatPaginator, MatSort } from "@angular/material";
-
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
+  styleUrls: ['./todo.component.scss'],
   animations: [
     trigger("detailExpand", [
       state(
@@ -35,8 +32,8 @@ import { MatPaginator, MatSort } from "@angular/material";
     ])
   ]
 })
-export class AppComponent implements OnInit {
-  // @ViewChild('partsDataSourceSort', {static: false}) partsDataSourceSort: MatSort;
+export class TodoComponent implements OnInit {
+// @ViewChild('partsDataSourceSort', {static: false}) partsDataSourceSort: MatSort;
   // @ViewChild('mainDataSourceSort', {static: false}) mainDataSourceSort: MatSort;
   // @ViewChild('StationCapSimMetricPaginator', {static: true}) StationCapSimMetricPaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -62,7 +59,8 @@ export class AppComponent implements OnInit {
   // }
 
   ngOnInit() {
-    // this.getFromService()
+    this.saveFromService()
+    this.getFromService()
     // this.dataSource.sort = this.mainDataSourceSort;
     // this.dataSource.sort = this.sort;
     // this.dataSource.paginator = this.paginator;
@@ -71,6 +69,7 @@ export class AppComponent implements OnInit {
   }
 
   getFromService(){
+    
     this.employeeService
     .getEmployees()
     .subscribe((data) => {
@@ -82,6 +81,35 @@ export class AppComponent implements OnInit {
         console.log('---',this.apiData)
       })
 
+    })
+  }
+
+  saveFromService(){
+    console.log('here--')
+    this.employeeService
+    .saveTodo()
+    .subscribe((data) => {
+      console.log('======',data)
+      // this.apiData.push(data)
+      // this.apiData = data//[JSON.stringify(data)]
+
+    },
+    (error: any) => {
+      console.log('====errrooor on saving==',error)
+    })
+  }
+
+  deleteFromService(){
+    console.log('here--')
+    this.employeeService
+    .deleteTodo()
+    .subscribe((data) => {
+      console.log('======',data)
+      // this.apiData = data//[JSON.stringify(data)]
+
+    },
+    (error: any) => {
+      console.log('====errrooor on deleteing==',error)
     })
   }
 
@@ -109,29 +137,13 @@ export class AppComponent implements OnInit {
     // })
   }
 
-  idGenerate() {
-    let number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    let alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
-
-    let arrCount = Math.floor(Math.random() * 10) + 8;
-    let i;
-    let id = "";
-    for (i = 0; i <= arrCount; i++) {
-      if (Math.floor(Math.random() * 2) === 0) {
-        id += number[Math.floor(Math.random() * 10)];
-      } else {
-        id += alpha[Math.floor(Math.random() * 10)];
-      }
-    }
-    return id;
-  }
-
   onSubmit() {
     let data = this.registrationForm.value;
-    const id = this.idGenerate();
-    data.id = id;
-    this.registrationForm.reset();
-    this.dataSource.addData(data);
+    data.userId = 1
+    // this.registrationForm.reset();
+    // this.apiData.push(data);
+    console.log('form data',data)
+    this.saveFromService()
   }
 
   editData(_id) {
@@ -190,8 +202,9 @@ export class AppComponent implements OnInit {
   }
 
   terminate(id) {
-    let filtered = this.dataSource.data.filter(data => data.id !== id);
-    this.dataSource.updateData(filtered);
+    this.deleteFromService()
+    // let filtered = this.dataSource.data.filter(data => data.id !== id);
+    // this.dataSource.updateData(filtered);
   }
  
 
@@ -199,20 +212,9 @@ export class AppComponent implements OnInit {
     // userName: ['',[Validators.required, Validators.minLength(2), forbiddenNameValidator(/password/)]],
     // password: [''],
     // confirmPassword: ['']
-    fn: [""],
-    ln: [""],
-    pos: [""],
-    details: this.fb.group({
-      age: [""],
-      sex: [""]
-    })
+    title: [""],
+    body: [""],
+    userId: ["1"]
   }); // ,{validator: PasswordValidator})
 
-  loadApiData() {
-    this.registrationForm.patchValue({
-      userName: "",
-      password: "",
-      confirmPassword: ""
-    });
-  }
 }

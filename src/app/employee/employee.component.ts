@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from "@angular/forms";
-import { forbiddenNameValidator } from "./shared/user-name.validator";
-import { PasswordValidator } from "./shared/password.validator";
-import { CustomDataSource } from "./shared/models/custom-datasource.model";
-import { MatTableOptions } from "./shared/models/mat-table-options.model";
-import { EmployeeHeader } from "./shared/table-headers/employee.header";
+import { forbiddenNameValidator } from "../shared/user-name.validator";
+import { PasswordValidator } from "../shared/password.validator";
+import { CustomDataSource } from "../shared/models/custom-datasource.model";
+import { MatTableOptions } from "../shared/models/mat-table-options.model";
+import { EmployeeHeader } from "../shared/table-headers/employee.header";
 import {
   trigger,
   state,
@@ -12,15 +12,14 @@ import {
   transition,
   animate
 } from "@angular/animations";
-import { EmployeeService } from '../app/employee.service'
+import { EmployeeService } from '../../app/employee.service'
 // import { MatSort } from '@angular/material/sort';
 // import {MatPaginator} from '@angular/material/paginator';
 import { MatPaginator, MatSort } from "@angular/material";
-
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  selector: 'app-employee',
+  templateUrl: './employee.component.html',
+  styleUrls: ['./employee.component.scss'],
   animations: [
     trigger("detailExpand", [
       state(
@@ -35,8 +34,8 @@ import { MatPaginator, MatSort } from "@angular/material";
     ])
   ]
 })
-export class AppComponent implements OnInit {
-  // @ViewChild('partsDataSourceSort', {static: false}) partsDataSourceSort: MatSort;
+export class EmployeeComponent implements OnInit {
+// @ViewChild('partsDataSourceSort', {static: false}) partsDataSourceSort: MatSort;
   // @ViewChild('mainDataSourceSort', {static: false}) mainDataSourceSort: MatSort;
   // @ViewChild('StationCapSimMetricPaginator', {static: true}) StationCapSimMetricPaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -62,27 +61,11 @@ export class AppComponent implements OnInit {
   // }
 
   ngOnInit() {
-    // this.getFromService()
     // this.dataSource.sort = this.mainDataSourceSort;
-    // this.dataSource.sort = this.sort;
-    // this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
     // this.dataSource.paginator = this.StationCapSimMetricPaginator;
     this.setTableDataSource([]);
-  }
-
-  getFromService(){
-    this.employeeService
-    .getEmployees()
-    .subscribe((data) => {
-      
-      this.apiData = data//[JSON.stringify(data)]
-      setTimeout (() => {
-        this.apiData.sort = this.sort;
-        this.apiData.paginator = this.paginator;
-        console.log('---',this.apiData)
-      })
-
-    })
   }
 
   setTableDataSource(datasource): void {
@@ -215,4 +198,5 @@ export class AppComponent implements OnInit {
       confirmPassword: ""
     });
   }
+
 }

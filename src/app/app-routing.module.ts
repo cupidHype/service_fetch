@@ -1,26 +1,16 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DataTableComponent } from './data-table/data-table.component'
+import { EmployeeComponent } from './employee/employee.component';
+import { TodoComponent } from './todo/todo.component';
 
 const routes: Routes = [
-//   {
-//   path: "",
-//   redirectTo: "employee",
-//   pathMatch: "full"
-// },
-// {
-//   path: "employee",
-//   children: [
-//     {
-//       path: "",
-//       component: DataTableComponent
-//     }
-//     // ,{
-//     //   path: "add",
-//     //   component: AddEmployeeComponent
-//     // }
-//   ]
-// }
+  { path: 'employee',
+    component: EmployeeComponent
+  },
+  { path: 'todo',
+    component: TodoComponent
+  }
 ];
 
 @NgModule({
@@ -28,3 +18,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+export const routingComponents = [EmployeeComponent, TodoComponent]

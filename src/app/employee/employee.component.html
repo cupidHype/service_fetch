@@ -1,7 +1,7 @@
 
-<!-- <div class="container-fluid">
+<div class="container-fluid">
   <h2>{{header}}</h2>
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()"> -->
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
     <!-- <div class="form-group">
       <label>Username</label>
       <input [class.is-invalid]="userName.invalid && userName.touched" 
@@ -22,7 +22,7 @@
       <small *ngIf="registrationForm.errors?.misMatch" class="text-danger">Password not not match!</small>
     </div> -->
 
-    <!-- <div class="form-group">
+    <div class="form-group">
       <label>First Name</label>
       <input formControlName="fn" class="form-control">
     </div>
@@ -61,7 +61,7 @@
     <button [hidden]="!isEditing" class="btn btn-primary" type="button" (click)="saveEdit(selected.id)">SAVE CHANGES</button> &nbsp; &nbsp;
     <button [hidden]="!isEditing" class="btn btn-danger" type="button" (click)="cancel()">CANCEL</button>
   </form>
-  <table mat-table [dataSource]="apiData"  
+  <table mat-table [dataSource]="dataSource"  
     #mainDataSourceSort="matSort" matSort 
     multiTemplateDataRows class="mattable w-100-p" >
 
@@ -126,10 +126,10 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="ELEMENT_HEADER.mainHeaderRow"></tr>
-    <tr mat-row *matRowDef="let row; columns: ELEMENT_HEADER.mainHeaderRow;"></tr> -->
-    <!-- <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="collapse-detail-row"></tr> -->
+    <tr mat-row *matRowDef="let row; columns: ELEMENT_HEADER.mainHeaderRow;"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail'];" class="collapse-detail-row"></tr>
     
-  <!-- </table>
+  </table>
   <mat-toolbar class="bg-white">
 
     <mat-toolbar-row>
@@ -141,13 +141,4 @@
         </mat-paginator>
     </mat-toolbar-row>
   </mat-toolbar>
-</div> -->
-<div class="nav">
-  <button  class="menu" mat-button [matMenuTriggerFor]="menu">Menu</button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item routerLink="/employee">Employee</button>
-    <button mat-menu-item routerLink="/todo">Todo</button>
-  </mat-menu>
 </div>
-
-<router-outlet></router-outlet>
