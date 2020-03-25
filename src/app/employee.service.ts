@@ -10,28 +10,31 @@ export class EmployeeService {
 
   readonly ROOT_URL = 'https://jsonplaceholder.typicode.com/posts'
   post: any;
+
+  httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type':  'application/json; charset=UTF-8',
+        'Authorization': '*'
+    })
+  };
+
   constructor(private http: HttpClient) {}
   private handleError;
   getEmployees():Observable<any>{
     return this.http.get<any>(this.ROOT_URL);
   }
 
-  saveTodo():Observable<any> {
-    return this.http.post<any>(this.ROOT_URL, JSON.stringify({
-      title: 'foo',
-      body: 'bar',
-      userId: 1
-    }),
-    {
-      headers: new HttpHeaders({
-        "Content-type": "application/json; charset=UTF-8"
-      })
-    }).pipe(catchError(this.handleError))
+  saveTodo(req):Observable<any> {
+    return this.http.post<any>(this.ROOT_URL,req,this.httpOptions).pipe(catchError(this.handleError))
   }
 
-  deleteTodo():Observable<void>{
-    console.log('here at deleteTodo')
-    return this.http.delete<void>('https://jsonplaceholder.typicode.com/posts/1')
+  deleteTodo(id):Observable<void>{
+    return this.http.delete<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      .pipe(catchError(this.handleError))
+  }
+
+  pickTodo(id):Observable<void>{
+    return this.http.get<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
       .pipe(catchError(this.handleError))
   }
 

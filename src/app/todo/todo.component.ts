@@ -42,10 +42,7 @@ export class TodoComponent implements OnInit {
   header = "Registration";
   title = "reactive-form";
   isEditing = false;
-  displayedColumns: string[] = ["id", "fn", "ln", "pos", "act"];
-  position = ["Developer", "HR", "Graphic Artist", "Front End Dev"];
-  sex = ["Female", "Male"];
-  selected = { id: "", fn: "", ln: "", pos: "", age: 0, sex: "" };
+  selected = { id: 0, title: "", body: ""};
   openedParts: any;
   childDataSource: any;
   mainDataSource: any;
@@ -59,13 +56,11 @@ export class TodoComponent implements OnInit {
   // }
 
   ngOnInit() {
-    this.saveFromService()
-    this.getFromService()
+   this.getFromService()
     // this.dataSource.sort = this.mainDataSourceSort;
     // this.dataSource.sort = this.sort;
     // this.dataSource.paginator = this.paginator;
     // this.dataSource.paginator = this.StationCapSimMetricPaginator;
-    this.setTableDataSource([]);
   }
 
   getFromService(){
@@ -78,20 +73,17 @@ export class TodoComponent implements OnInit {
       setTimeout (() => {
         this.apiData.sort = this.sort;
         this.apiData.paginator = this.paginator;
-        console.log('---',this.apiData)
       })
-
+      return data;
     })
   }
 
-  saveFromService(){
-    console.log('here--')
+  saveFromService(req){
     this.employeeService
-    .saveTodo()
+    .saveTodo(req)
     .subscribe((data) => {
-      console.log('======',data)
-      // this.apiData.push(data)
       // this.apiData = data//[JSON.stringify(data)]
+      this.apiData = [...this.apiData, ...[data]];
 
     },
     (error: any) => {
@@ -99,34 +91,18 @@ export class TodoComponent implements OnInit {
     })
   }
 
-  deleteFromService(){
-    console.log('here--')
+  deleteFromService(id){
     this.employeeService
-    .deleteTodo()
+    .deleteTodo(id)
     .subscribe((data) => {
-      console.log('======',data)
-      // this.apiData = data//[JSON.stringify(data)]
+      let filtered = this.apiData.filter(data => data.id !== id);
+      this.apiData = [...filtered]
 
     },
     (error: any) => {
-      console.log('====errrooor on deleteing==',error)
+      console.log("error on deleting -",error)
+      return error;
     })
-  }
-
-  setTableDataSource(datasource): void {
-    datasource = JSON.parse(JSON.stringify(datasource));
-    let data = [];
-    setTimeout(() => {
-      datasource.map(element => {
-        let length = element;
-
-        while (length != 0) {
-          data.push(element);
-          length--;
-        }
-        this.setDatasource(data);
-      });
-    });
   }
 
   setDatasource(datasource) {
@@ -140,31 +116,50 @@ export class TodoComponent implements OnInit {
   onSubmit() {
     let data = this.registrationForm.value;
     data.userId = 1
-    // this.registrationForm.reset();
+    this.registrationForm.reset();
     // this.apiData.push(data);
-    console.log('form data',data)
-    this.saveFromService()
+    this.saveFromService(data)
   }
 
-  editData(_id) {
-    let filtered = this.dataSource.data.filter(data => data.id === _id);
-    this.isEditing = true;
-    this.selected.id = filtered[0].id;
-    this.selected.fn = filtered[0].fn;
-    this.selected.ln = filtered[0].ln;
-    this.selected.pos = filtered[0].pos;
-    this.selected.sex = filtered[0].details.sex;
-    this.selected.age = filtered[0].details.age;
-    this.header = "Edit";
-    this.registrationForm.patchValue({
-      fn: this.selected.fn,
-      ln: this.selected.ln,
-      pos: this.selected.pos,
-      details: {
-        sex: this.selected.sex,
-        age: this.selected.age
-      }
+  editData(id) {
+    this.employeeService
+    .pickTodo(id)
+    .subscribe((datas) => {
+      let filtered = this.apiData.filter(data => data.id === id);
+      this.isEditing = true;
+      this.header = "Edit";
+      // this.apiData = [...filtered]
+      this.selected.id = filtered[0].id;
+      this.selected.title = filtered[0].title;
+      this.selected.body = filtered[0].body;
+
+      this.registrationForm.patchValue({
+        title: this.selected.title,
+        body: this.selected.body
     });
+    },
+    (error: any) => {
+      console.log("error on deleting -",error)
+      return error;
+    })
+    // let filtered = this.dataSource.data.filter(data => data.id === _id);
+    // this.isEditing = true;
+    // this.selected.id = filtered[0].id;
+    // this.selected.fn = filtered[0].fn;
+    // this.selected.ln = filtered[0].ln;
+    // this.selected.pos = filtered[0].pos;
+    // this.selected.sex = filtered[0].details.sex;
+    // this.selected.age = filtered[0].details.age;
+    // this.header = "Edit";
+    // this.registrationForm.patchValue({
+    //   fn: this.selected.fn,
+    //   ln: this.selected.ln,
+    //   pos: this.selected.pos,
+    //   details: {
+    //     sex: this.selected.sex,
+    //     age: this.selected.age
+    //   }
+    // });
   }
 
   openParts(evt, row) {
@@ -183,12 +178,13 @@ export class TodoComponent implements OnInit {
   }
 
   saveEdit(id) {
-    let index = this.dataSource.data.find(data => data.id === id);
-    index.fn = this.registrationForm.value.fn;
-    index.ln = this.registrationForm.value.ln;
-    index.pos = this.registrationForm.value.pos;
-    index.details = this.registrationForm.value.details;
-    this.dataSource.addSpecific({ _id: id, updatedData: index });
+    let picked = this.apiData.find(data => data.id === id);
+    picked.title = this.registrationForm.value.title;
+    picked.body = this.registrationForm.value.body;
+    let index = this.apiData.findIndex((data) => data.id === id)
+    let updatedData = this.apiData[index]
+    this.apiData[index].title = this.registrationForm.value.title;
+    this.apiData[index].body = this.registrationForm.value.body;
     this.registrationForm.reset();
     this.header = "Registration";
     this.isEditing = false;
@@ -202,9 +198,8 @@ export class TodoComponent implements OnInit {
   }
 
   terminate(id) {
-    this.deleteFromService()
-    // let filtered = this.dataSource.data.filter(data => data.id !== id);
-    // this.dataSource.updateData(filtered);
+    this.deleteFromService(id)
+
   }
  
 

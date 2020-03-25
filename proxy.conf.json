@@ -1,0 +1,7 @@
+{  
+    "/nodeX/*": {  
+       "target": "https://jsonplaceholder.typicode.com/posts",
+       "secure": false,  
+       "changeOrigin": true
+    } 
+}
