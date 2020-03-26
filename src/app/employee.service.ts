@@ -29,12 +29,12 @@ export class EmployeeService {
   }
 
   deleteTodo(id):Observable<void>{
-    return this.http.delete<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    return this.http.delete<void>(`${this.ROOT_URL}/${id}`)
       .pipe(catchError(this.handleError))
   }
 
   pickTodo(id):Observable<void>{
-    return this.http.get<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    return this.http.get<void>(`${this.ROOT_URL}/${id}`)
       .pipe(catchError(this.handleError))
   }
 
