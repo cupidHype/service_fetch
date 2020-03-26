@@ -26,10 +26,6 @@ export class EmployeeHeader {
     main: ["act"]
   }
 
-  private _firstTodo:{todo} = {
-    todo: ["handler"]
-  }
-
   private _lastTodo:{todo} = {
     todo: ["act"]
   }
@@ -66,6 +62,6 @@ export class EmployeeHeader {
 
       this.mainHeaderRow = [...this._first.main,...mainHeaderRows,...this._last.main];
       this.childHeaderRow = [...childHeaderRows];
-      this.todoHeaderRow = [...this._firstTodo.todo,...todoHeaderRows,...this._lastTodo.todo];
+      this.todoHeaderRow = [...todoHeaderRows,...this._lastTodo.todo];
   }
 }

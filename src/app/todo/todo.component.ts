@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
-import { forbiddenNameValidator } from "../shared/user-name.validator";
-import { PasswordValidator } from "../shared/password.validator";
 import { CustomDataSource } from "../shared/models/custom-datasource.model";
 import { MatTableOptions } from "../shared/models/mat-table-options.model";
 import { EmployeeHeader } from "../shared/table-headers/employee.header";
@@ -13,7 +11,9 @@ import {
   animate
 } from "@angular/animations";
 import { EmployeeService } from '../../app/employee.service'
+import { UtilService } from '../../app/util.service'
 import { MatPaginator, MatSort } from "@angular/material";
+
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
@@ -33,9 +33,6 @@ import { MatPaginator, MatSort } from "@angular/material";
   ]
 })
 export class TodoComponent implements OnInit {
-// @ViewChild('partsDataSourceSort', {static: false}) partsDataSourceSort: MatSort;
-  // @ViewChild('mainDataSourceSort', {static: false}) mainDataSourceSort: MatSort;
-  // @ViewChild('StationCapSimMetricPaginator', {static: true}) StationCapSimMetricPaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   ELEMENT_HEADER: EmployeeHeader = new EmployeeHeader();
@@ -50,17 +47,16 @@ export class TodoComponent implements OnInit {
   matTableOptions: MatTableOptions = new MatTableOptions({});
   apiData;
 
-  constructor(private fb: FormBuilder, private employeeService : EmployeeService) {}
-  // get userName(){
-  //   return this.registrationForm.get('userName');
-  // }
+  constructor(
+    private fb: FormBuilder, 
+    private employeeService: EmployeeService,
+    private popups: UtilService
+    ) {}
 
   ngOnInit() {
    this.getFromService()
-    // this.dataSource.sort = this.mainDataSourceSort;
     // this.dataSource.sort = this.sort;
     // this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator = this.StationCapSimMetricPaginator;
   }
 
   getFromService(){
@@ -82,7 +78,6 @@ export class TodoComponent implements OnInit {
     this.employeeService
     .saveTodo(req)
     .subscribe((data) => {
-      // this.apiData = data//[JSON.stringify(data)]
       this.apiData = [...this.apiData, ...[data]];
 
     },
@@ -107,21 +102,18 @@ export class TodoComponent implements OnInit {
 
   setDatasource(datasource) {
     this.dataSource = new CustomDataSource(datasource);
-    // setTimeout(() => {
-    // this.dataSource.sort = this.mainDataSourceSort;
-    // this.dataSource.paginator = this.StationCapSimMetricPaginator;
-    // })
   }
 
   onSubmit() {
     let data = this.registrationForm.value;
     data.userId = 1
     this.registrationForm.reset();
-    // this.apiData.push(data);
     this.saveFromService(data)
+    return this.popups.savePop()
   }
 
   editData(id) {
+    
     this.employeeService
     .pickTodo(id)
     .subscribe((datas) => {
@@ -142,24 +134,6 @@ export class TodoComponent implements OnInit {
       console.log("error on deleting -",error)
       return error;
     })
-    // let filtered = this.dataSource.data.filter(data => data.id === _id);
-    // this.isEditing = true;
-    // this.selected.id = filtered[0].id;
-    // this.selected.fn = filtered[0].fn;
-    // this.selected.ln = filtered[0].ln;
-    // this.selected.pos = filtered[0].pos;
-    // this.selected.sex = filtered[0].details.sex;
-    // this.selected.age = filtered[0].details.age;
-    // this.header = "Edit";
-    // this.registrationForm.patchValue({
-    //   fn: this.selected.fn,
-    //   ln: this.selected.ln,
-    //   pos: this.selected.pos,
-    //   details: {
-    //     sex: this.selected.sex,
-    //     age: this.selected.age
-    //   }
-    // });
   }
 
   openParts(evt, row) {
@@ -178,17 +152,22 @@ export class TodoComponent implements OnInit {
   }
 
   saveEdit(id) {
-    let picked = this.apiData.find(data => data.id === id);
-    picked.title = this.registrationForm.value.title;
-    picked.body = this.registrationForm.value.body;
-    let index = this.apiData.findIndex((data) => data.id === id)
-    let updatedData = this.apiData[index]
-    this.apiData[index].title = this.registrationForm.value.title;
-    this.apiData[index].body = this.registrationForm.value.body;
-    this.registrationForm.reset();
-    this.header = "Registration";
-    this.isEditing = false;
-    this.openedParts = null;
+    return this.popups.editPop().then((result) => {
+      if (result.value) {
+        
+        let picked = this.apiData.find(data => data.id === id);
+        picked.title = this.registrationForm.value.title;
+        picked.body = this.registrationForm.value.body;
+        let index = this.apiData.findIndex((data) => data.id === id)
+        let updatedData = this.apiData[index]
+        this.apiData[index].title = this.registrationForm.value.title;
+        this.apiData[index].body = this.registrationForm.value.body;
+        this.registrationForm.reset();
+        this.header = "Registration";
+        this.isEditing = false;
+        this.openedParts = null;
+      }
+    })
   }
 
   cancel() {
@@ -198,7 +177,12 @@ export class TodoComponent implements OnInit {
   }
 
   terminate(id) {
-    this.deleteFromService(id)
+    return this.popups.deletePop().then((result) => {
+      if (result.value) {
+        this.deleteFromService(id)
+      }
+    })
+    // this.deleteFromService(id)
 
   }
  
