@@ -1,5 +1,5 @@
 {  
-    "/nodeX/*": {  
+    "/posts": {
        "target": "https://jsonplaceholder.typicode.com",
        "secure": false,  
        "changeOrigin": true

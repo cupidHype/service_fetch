@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class EmployeeService {
 
-  readonly ROOT_URL = 'https://jsonplaceholder.typicode.com/posts'
+  readonly ROOT_URL = '/posts'
   post: any;
 
   httpOptions = {
