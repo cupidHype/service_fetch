@@ -1,9 +1,20 @@
-<div class="nav">
-  <button  class="menu" mat-button [matMenuTriggerFor]="menu">Menu</button>
+<!-- <div class="nav"> -->
+  <!-- <button  class="menu" mat-button [matMenuTriggerFor]="menu">Menu</button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item routerLink="/employee">Employee</button>
     <button mat-menu-item routerLink="/todo">Todo</button>
-  </mat-menu>
-</div>
+  </mat-menu> -->
+
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+  *ngFor="let link of navLinks"
+  [routerLink]="link.link"
+  routerLinkActive #rla="routerLinkActive"
+  [active]="rla.isActive">
+  {{link.label}}
+  </a>
+  </nav>
+
+<!-- </div> -->
 
 <router-outlet></router-outlet>

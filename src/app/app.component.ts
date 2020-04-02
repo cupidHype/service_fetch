@@ -6,7 +6,7 @@ import {
   transition,
   animate
 } from "@angular/animations";
-
+import { Router } from "@angular/router";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -26,14 +26,29 @@ import {
   ]
 })
 export class AppComponent implements OnInit {
-
-  constructor() {}
+  navLinks: any[];
+  activeLinkIndex = -1;
+  constructor(private router: Router) {
+    this.navLinks = [
+      {
+        label: "Employee",
+        link: "./employee",
+        index: 0
+      },
+      {
+        label: "Todo",
+        link: "./todo",
+        index: 1
+      }
+    ];
+  }
   // get userName(){
   //   return this.registrationForm.get('userName');
   // }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.router.events.subscribe((res) => {
+      this.activeLinkIndex = this.navLinks.indexOf(this.navLinks.find(tab => tab.link === '.' + this.router.url));
+  });
   }
-
-
 }

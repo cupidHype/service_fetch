@@ -15,6 +15,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {HttpClientModule} from '@angular/common/http';
 import {MatMenuModule} from '@angular/material/menu';
 import { NgxLoadingModule } from 'ngx-loading';
+import {MatTabsModule} from '@angular/material/tabs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,8 @@ import { NgxLoadingModule } from 'ngx-loading';
     MatExpansionModule,
     HttpClientModule,
     MatMenuModule,
-    NgxLoadingModule.forRoot({})
+    NgxLoadingModule.forRoot({}),
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

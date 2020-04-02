@@ -5,7 +5,7 @@
     <div class="custom-class">
     </div>
   </ng-template>
-  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px', fullScreenBackdrop: true }" [template]="customLoadingTemplate"></ngx-loading>
   
   <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
 
