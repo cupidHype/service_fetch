@@ -13,6 +13,7 @@ import {
 import { EmployeeService } from '../../app/employee.service'
 import { UtilService } from '../../app/util.service'
 import { MatPaginator, MatSort } from "@angular/material";
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-todo',
@@ -34,7 +35,7 @@ import { MatPaginator, MatSort } from "@angular/material";
 })
 export class TodoComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   ELEMENT_HEADER: EmployeeHeader = new EmployeeHeader();
   header = "Registration";
   title = "reactive-form";
@@ -46,6 +47,9 @@ export class TodoComponent implements OnInit {
   dataSource:CustomDataSource = new CustomDataSource([]);
   matTableOptions: MatTableOptions = new MatTableOptions({});
   apiData;
+
+  public loading = false;
+
 
   constructor(
     private fb: FormBuilder, 
@@ -60,16 +64,17 @@ export class TodoComponent implements OnInit {
   }
 
   getFromService(){
-    
+    this.loading = true;
     this.employeeService
     .getEmployees()
     .subscribe((data) => {
       
-      this.apiData = data//[JSON.stringify(data)]
+      this.apiData = new CustomDataSource(data)//[JSON.stringify(data)]
       setTimeout (() => {
         this.apiData.sort = this.sort;
         this.apiData.paginator = this.paginator;
       })
+      this.loading = false;
       return data;
     })
   }
@@ -78,25 +83,43 @@ export class TodoComponent implements OnInit {
     this.employeeService
     .saveTodo(req)
     .subscribe((data) => {
-      this.apiData = [...this.apiData, ...[data]];
-
+      try{
+        this.apiData.data = [...this.apiData.data, ...[data]];
+        this.loading = false;
+        return this.popups.savePop()
+      }catch(error){
+        this.loading = false;
+        console.log('====errrooor on saving==',error)
+        return this.popups.errorPop()
+      }
     },
     (error: any) => {
+      this.loading = false;
       console.log('====errrooor on saving==',error)
+      return this.popups.errorPop()
     })
   }
 
   deleteFromService(id){
+
+    this.loading = true;
     this.employeeService
     .deleteTodo(id)
     .subscribe((data) => {
-      let filtered = this.apiData.filter(data => data.id !== id);
-      this.apiData = [...filtered]
-
+      try{
+        let filtered = this.apiData.data.filter(data => data.id !== id);
+        this.apiData.data = [...filtered]
+        this.loading = false;
+      }catch(error){
+        this.loading = false;
+        console.log('====errrooor on saving==',error)
+        return this.popups.errorPop()
+      }
     },
     (error: any) => {
-      console.log("error on deleting -",error)
-      return error;
+      this.loading = false;
+      console.log('====errrooor on saving==',error)
+      return this.popups.errorPop()
     })
   }
 
@@ -105,34 +128,43 @@ export class TodoComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     let data = this.registrationForm.value;
     data.userId = 1
     this.registrationForm.reset();
     this.saveFromService(data)
-    return this.popups.savePop()
+    
   }
 
   editData(id) {
-    
+    this.loading = true;
     this.employeeService
     .pickTodo(id)
     .subscribe((datas) => {
-      let filtered = this.apiData.filter(data => data.id === id);
-      this.isEditing = true;
-      this.header = "Edit";
-      // this.apiData = [...filtered]
-      this.selected.id = filtered[0].id;
-      this.selected.title = filtered[0].title;
-      this.selected.body = filtered[0].body;
-
-      this.registrationForm.patchValue({
-        title: this.selected.title,
-        body: this.selected.body
-    });
+      try{
+        let filtered = this.apiData.data.filter(data => data.id === id);
+        this.isEditing = true;
+        this.header = "Edit";
+        // this.apiData = [...filtered]
+        this.selected.id = filtered[0].id;
+        this.selected.title = filtered[0].title;
+        this.selected.body = filtered[0].body;
+  
+        this.registrationForm.patchValue({
+          title: this.selected.title,
+          body: this.selected.body
+        });
+        this.loading = false;
+      }catch(error){
+        this.loading = false;
+        console.log('====errrooor on saving==',error)
+        return this.popups.errorPop()
+      }
     },
     (error: any) => {
-      console.log("error on deleting -",error)
-      return error;
+      this.loading = false;
+      console.log('====errrooor on saving==',error)
+      return this.popups.errorPop()
     })
   }
 
@@ -155,13 +187,12 @@ export class TodoComponent implements OnInit {
     return this.popups.editPop().then((result) => {
       if (result.value) {
         
-        let picked = this.apiData.find(data => data.id === id);
+        let picked = this.apiData.data.find(data => data.id === id);
         picked.title = this.registrationForm.value.title;
         picked.body = this.registrationForm.value.body;
-        let index = this.apiData.findIndex((data) => data.id === id)
-        let updatedData = this.apiData[index]
-        this.apiData[index].title = this.registrationForm.value.title;
-        this.apiData[index].body = this.registrationForm.value.body;
+        let index = this.apiData.data.findIndex((data) => data.id === id)
+        this.apiData.data[index].title = this.registrationForm.value.title;
+        this.apiData.data[index].body = this.registrationForm.value.body;
         this.registrationForm.reset();
         this.header = "Registration";
         this.isEditing = false;

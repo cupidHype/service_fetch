@@ -7,6 +7,17 @@ import Swal from "sweetalert2";
 export class UtilService {
   constructor() {}
 
+  public errorPop(): any {
+    return Swal.fire({
+      title: "ERROR",
+      text: "There is an error encountered with this action.",
+      icon: "error",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Dismiss"
+    });
+  }
+
   public deletePop(): any {
     return Swal.fire({
       title: "WARNING",

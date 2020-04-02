@@ -1,6 +1,12 @@
 
 <div class="container-fluid">
   <h2>{{header}}</h2>
+  <ng-template #customLoadingTemplate>
+    <div class="custom-class">
+    </div>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+  
   <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
 
 
@@ -17,6 +23,7 @@
     <button [hidden]="!isEditing" class="btn btn-primary" type="button" (click)="saveEdit(selected.id)">SAVE CHANGES</button> &nbsp; &nbsp;
     <button [hidden]="!isEditing" class="btn btn-danger" type="button" (click)="cancel()">CANCEL</button>
   </form>
+
   <table mat-table [dataSource]="apiData"  
     #mainDataSourceSort="matSort" matSort 
     multiTemplateDataRows class="mattable w-100-p" >
@@ -85,4 +92,5 @@
         </mat-paginator>
     </mat-toolbar-row>
   </mat-toolbar>
+  
 </div>
